@@ -4,7 +4,10 @@ import type { AirportResponse, AirportResult, FlightResponse } from "../types";
 
 const clientV1 = axios.create({
   baseURL: "https://sky-scrapper.p.rapidapi.com/api/v1",
-  params: import.meta.env.VITE_SKY_API_KEY,
+  headers: {
+    "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
+    "x-rapidapi-key": import.meta.env.VITE_RAPID_API_KEY,
+  },
 });
 
 const CABIN_CLASSES = ["economy", "premium_economy", "business", "first"] as const;
