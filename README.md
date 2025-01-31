@@ -1,50 +1,67 @@
-# React + TypeScript + Vite
+# ✈️ Flight Search App  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern flight search application that allows users to find and compare flights easily.
 
-Currently, two official plugins are available:
+![Preview](public/preview.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+### **Motivation**  
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+The goal of this project is to create a **fast, user-friendly, and reliable** flight search tool inspired by Google Flights.  
+This project aims to:  
+**Enhance usability** – Clean UI with clear flight details.  
+**Ensure accuracy** – Fetch real-time flight data via an external API.  
+**Improve performance** – Debounced search queries and efficient state management.  
+**Reduce API load** – Cache results to minimize redundant API calls.  
 
-- Configure the top-level `parserOptions` property like this:
+---
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### **Tech Stack**  
+
+- **Frontend:** React (Vite) + TypeScript  
+- **UI Components:** MUI (`@mui/x-date-pickers`) for date selection  
+- **State Management:** React Hooks (`useState`, `useEffect`, `useMemo`)  
+- **Validation:** Zod (ensuring correct form inputs)  
+- **API Integration:** Sky-Scrapper API (fetching real-time flights)  
+- **Icons:** React Icons (`react-icons/md`)  
+
+---
+
+### **Technologies & Decision Making**  
+
+**Vite + React**  
+Chosen for its fast development experience and optimized build output.  
+
+**MUI for UI**  
+Provides an accessible and consistent design system, reducing development time with prebuilt components.  
+
+**Zod for Validation**  
+Ensures correct input validation before making API calls, preventing unnecessary errors and enhancing reliability.  
+
+---
+
+### **How to Run**  
+
+
+```sh
+# Install Dependencies  
+npm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```sh
+# Start the Development Server
+npm install
 ```
+
+**Open in browser:**<br />
+Visit http://localhost:5173
+
+--- 
+
+### ⚠️ Potential Improvements
+
+🔹 Add sorting and filtering options.<br />
+🔹 Implement pagination for large result sets.<br />
+🔹 Improve caching mechanism for better performance.
