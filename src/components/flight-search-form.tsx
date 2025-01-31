@@ -88,13 +88,6 @@ export const FlightSearchForm = () => {
               label="Return Date"
               value={searchData.returnDate}
               onSelectDate={handleSearchDataChange("returnDate")}
-            />
-            <DatePicker
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                },
-              }}
               disableHighlightToday
             />
           </Grid2>
