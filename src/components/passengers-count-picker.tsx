@@ -9,11 +9,11 @@ import {
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { MdAdd, MdArrowDropDown, MdPerson, MdRemove } from "react-icons/md";
-import type { SearchData } from "../types";
+import type { SearchFlightOptions } from "../types";
 
 type Props = {
-  setPassengers: React.Dispatch<React.SetStateAction<SearchData["passengers"]>>;
-  passengers: SearchData["passengers"];
+  setPassengers: React.Dispatch<React.SetStateAction<SearchFlightOptions["passengers"]>>;
+  passengers: SearchFlightOptions["passengers"];
 };
 
 const PassengerCountPicker = ({ setPassengers, passengers }: Props) => {
