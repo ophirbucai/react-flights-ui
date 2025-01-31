@@ -1,5 +1,6 @@
 import { Button, CircularProgress, Container, Grid2 } from "@mui/material";
-import { useCallback, useState } from "react";
+import dayjs from "dayjs";
+import { useCallback, useRef, useState } from "react";
 import { searchFlights } from "../services/sky-scrapper.service";
 import { CabinClass, type FlightResult, type SearchFlightOptions, type TripType } from "../types";
 import { AirportsPicker } from "./airports-picker";
@@ -8,6 +9,7 @@ import PassengerCountPicker from "./passengers-count-picker";
 import { TripTypePicker } from "./trip-type-picker";
 
 export const FlightSearchForm = () => {
+  const today = useRef(dayjs());
   const [tripType, setTripType] = useState<TripType>("roundtrip");
   const [searchData, setSearchData] = useState<SearchFlightOptions>({
     origin: null,
@@ -91,6 +93,8 @@ export const FlightSearchForm = () => {
             label="Departure Date"
             onSelectDate={handleSearchDataChange("departDate")}
             value={searchData.departDate}
+            minDate={today.current}
+            showDaysOutsideCurrentMonth
           />
         </Grid2>
 
@@ -100,6 +104,7 @@ export const FlightSearchForm = () => {
               label="Return Date"
               value={searchData.returnDate}
               onSelectDate={handleSearchDataChange("returnDate")}
+              minDate={searchData.departDate || today.current}
               disableHighlightToday
             />
           </Grid2>
