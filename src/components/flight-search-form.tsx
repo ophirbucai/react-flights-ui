@@ -39,7 +39,6 @@ export const FlightSearchForm = () => {
 
       setLoading(true);
       const result = await searchFlights(searchData);
-      console.log(result);
       setResult(result);
     } catch (e) {
       console.error(e);
