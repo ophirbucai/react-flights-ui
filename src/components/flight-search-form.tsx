@@ -1,9 +1,9 @@
 import { Button, CircularProgress, Container, Grid2 } from "@mui/material";
 import dayjs from "dayjs";
 import { useCallback, useMemo, useRef, useState } from "react";
+import { searchFormSchema } from "../schemas/search-form.schema";
 import { searchFlights } from "../services/sky-scrapper.service";
 import { CabinClass, type FlightResult, type SearchFlightOptions, type TripType } from "../types";
-import { searchFormSchema } from "../schemas/search-form.schema";
 import { AirportsPicker } from "./airports-picker";
 import { FlightDatePicker } from "./flight-date-picker";
 import { FlightResultsTable } from "./flight-results-table";

@@ -1,4 +1,5 @@
 {
   "plugins": ["@stylistic/stylelint-plugin"],
-  "extends": ["stylelint-config-standard"]
+  "extends": ["stylelint-config-standard"],
+  "ignoreFiles": ["dist/**"]
 }
