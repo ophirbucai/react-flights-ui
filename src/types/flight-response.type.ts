@@ -36,4 +36,4 @@ export type FlightResult = {
   destinationImageUrl: string;
 };
 
-export type FlightResponse = APIResponse<FlightResult[]>;
+export type FlightResponse = APIResponse<FlightResult>;

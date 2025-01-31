@@ -5,6 +5,7 @@ import { searchFlights } from "../services/sky-scrapper.service";
 import { CabinClass, type FlightResult, type SearchFlightOptions, type TripType } from "../types";
 import { AirportsPicker } from "./airports-picker";
 import { FlightDatePicker } from "./flight-date-picker";
+import { FlightResultsTable } from "./flight-results-table";
 import PassengerCountPicker from "./passengers-count-picker";
 import { TripTypePicker } from "./trip-type-picker";
 
@@ -24,24 +25,23 @@ export const FlightSearchForm = () => {
     },
   });
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<FlightResult[] | null>(null);
+  const [result, setResult] = useState<FlightResult | null>(null);
 
   const isFormValid =
-    !searchData.origin ||
-    !searchData.destination ||
-    !searchData.date ||
-    (tripType === "roundtrip" && !searchData.returnDate?.isAfter(searchData.date)) ||
-    !searchData.passengers ||
-    searchData.passengers.adults < 1;
+    searchData.origin ||
+    searchData.destination ||
+    searchData.date ||
+    (tripType === "roundtrip" && searchData.returnDate?.isAfter(searchData.date)) ||
+    searchData.passengers?.adults > 0;
 
   async function handleSearch() {
     try {
-      if (isFormValid) return; // Todo: Descriptive error / focus on relevant input
+      if (!isFormValid) return; // Todo: Descriptive error / focus on relevant input
 
       setLoading(true);
-      const results = await searchFlights(searchData);
-      console.log(results);
-      setResults(results);
+      const result = await searchFlights(searchData);
+      console.log(result);
+      setResult(result);
     } catch (e) {
       console.error(e);
       // Todo: Handle errors gracefully
@@ -70,7 +70,7 @@ export const FlightSearchForm = () => {
     [],
   );
 
-  const showResults = !!results;
+  const showResults = !!result;
 
   return (
     <Container maxWidth="md">
@@ -126,7 +126,7 @@ export const FlightSearchForm = () => {
       </Grid2>
       {showResults && (
         <Grid2 container sx={{ mt: 4 }}>
-          {/* Results table would go here */}
+          <FlightResultsTable result={result} />
         </Grid2>
       )}
     </Container>
