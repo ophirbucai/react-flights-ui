@@ -73,7 +73,12 @@ export async function getNearbyAirports({
 }
 
 class APIResponseCache<T extends APIResponse<unknown>> {
-  constructor(private readonly cacheKey: string) {}
+  protected prefix = "sky-scrapper:";
+
+  constructor(private readonly cacheKey: string) {
+    this.cacheKey = `${this.prefix}${cacheKey}`;
+  }
+
   get response() {
     const cachedData = window.localStorage.getItem(this.cacheKey);
 
@@ -83,6 +88,14 @@ class APIResponseCache<T extends APIResponse<unknown>> {
   }
 
   store(data: T) {
-    window.localStorage.setItem(this.cacheKey, JSON.stringify(data));
+    data.status && window.localStorage.setItem(this.cacheKey, JSON.stringify(data));
+  }
+
+  clear() {
+    for (const key of Object.keys({ ...window.localStorage })) {
+      if (key.startsWith(this.prefix)) {
+        window.localStorage.removeItem(key);
+      }
+    }
   }
 }
