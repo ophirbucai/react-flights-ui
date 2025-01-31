@@ -78,6 +78,8 @@ function AirportAutocomplete({
   const timeoutRef = useRef<number | null>(null);
   const initialRender = useRef(true);
   const [options, setOptions] = useState<AirportResult[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!showNearbyAirports) return;
@@ -93,15 +95,24 @@ function AirportAutocomplete({
   }, [onChange, showNearbyAirports]);
 
   const handleInput = useCallback((e: React.SyntheticEvent) => {
+    setLoading(true);
+
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
     timeoutRef.current = setTimeout(async () => {
-      const input = e.target as HTMLInputElement;
-      const airports = await searchAirport(input.value);
-      setOptions(airports);
-      timeoutRef.current = null;
+      try {
+        const input = e.target as HTMLInputElement;
+        const airports = await searchAirport(input.value);
+        setOptions(airports);
+        timeoutRef.current = null;
+      } catch (e) {
+        console.error(e);
+        // Handle errors gracefully
+      } finally {
+        setLoading(false);
+      }
     }, 300);
   }, []);
 
@@ -109,18 +120,24 @@ function AirportAutocomplete({
     <Autocomplete<AirportResult>
       value={value}
       onChange={(_e, newValue) => newValue && onChange(newValue)}
-      options={options} // Todo: Inject airports
+      options={options}
       getOptionLabel={(option) => (option ? option.presentation.suggestionTitle : "")}
+      open={!loading && isOpen}
       renderInput={(params) => (
         <TextField
           {...params}
           label={label}
           fullWidth
-          onChange={handleInput}
+          onChange={(e) => {
+            handleInput(e);
+            const hasSearchValue = (e.target as HTMLInputElement).value.trim().length > 0;
+            setIsOpen(hasSearchValue);
+          }}
           slotProps={{
             input: {
               ...params.InputProps,
               startAdornment: icon,
+              endAdornment: null,
             },
           }}
         />
