@@ -1,8 +1,9 @@
 import { Button, CircularProgress, Container, Grid2, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { SearchData, TripType } from "../types";
 import { AirportsPicker } from "./airports-picker";
+import { FlightDatePicker } from "./flight-date-picker";
 import PassengerCountPicker from "./passengers-count-picker";
 import { TripTypePicker } from "./trip-type-picker";
 
@@ -35,6 +36,19 @@ export const FlightSearchForm = () => {
     setShowResults(false);
   };
 
+  const handleSearchDataChange = useCallback(
+    <K extends keyof SearchData>(key: K): React.Dispatch<React.SetStateAction<SearchData[K]>> =>
+      (newValueOrCallback) =>
+        setSearchData((prev) => ({
+          ...prev,
+          [key]:
+            typeof newValueOrCallback === "function"
+              ? newValueOrCallback(prev[key])
+              : newValueOrCallback,
+        })),
+    [],
+  );
+
   if (showResults) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
@@ -54,40 +68,28 @@ export const FlightSearchForm = () => {
           <TripTypePicker tripType={tripType} setTripType={setTripType} />
           <PassengerCountPicker
             passengers={searchData.passengers}
-            setPassengers={(value) =>
-              setSearchData((prev) => ({
-                ...prev,
-                passengers: typeof value === "function" ? value(prev.passengers) : value,
-              }))
-            }
+            setPassengers={handleSearchDataChange("passengers")}
           />
         </Grid2>
         <Grid2 size={12}>
           <AirportsPicker searchData={searchData} setSearchData={setSearchData} />
         </Grid2>
         <Grid2 size={tripType === "one-way" ? 12 : 6}>
-          <DatePicker
+          <FlightDatePicker
             label="Departure Date"
+            onSelectDate={handleSearchDataChange("departDate")}
             value={searchData.departDate}
-            onChange={(newValue) => {
-              setSearchData((prev) => ({ ...prev, departDate: newValue }));
-            }}
-            slotProps={{
-              textField: {
-                fullWidth: true,
-              },
-            }}
           />
         </Grid2>
 
         {tripType === "roundtrip" && (
           <Grid2 size={6}>
-            <DatePicker
+            <FlightDatePicker
               label="Return Date"
               value={searchData.returnDate}
-              onChange={(newValue) => {
-                setSearchData((prev) => ({ ...prev, returnDate: newValue }));
-              }}
+              onSelectDate={handleSearchDataChange("returnDate")}
+            />
+            <DatePicker
               slotProps={{
                 textField: {
                   fullWidth: true,
