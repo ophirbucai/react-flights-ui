@@ -9,7 +9,7 @@ const theme = createTheme({
   components: {
     MuiInputAdornment: {
       styleOverrides: {
-        filled: ({ theme }) => ({
+        root: ({ theme }) => ({
           marginTop: "0 !important",
           color: theme.palette.grey[500],
           cursor: "pointer",

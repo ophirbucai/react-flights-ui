@@ -1,4 +1,11 @@
-import { Autocomplete, type AutocompleteProps, Box, IconButton, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  type AutocompleteProps,
+  Box,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import { useCallback } from "react";
 import { MdOutlineLocationOn, MdSwapHoriz, MdTripOrigin } from "react-icons/md";
 import type { Airport, SearchData } from "../types";
@@ -29,7 +36,11 @@ export const AirportsPicker = ({ searchData, setSearchData }: Props) => {
         <Box flex={1}>
           <AirportAutocomplete
             value={searchData.origin}
-            icon={<MdTripOrigin color="#9aa0a6" size={16} style={{ marginInline: 6 }} />}
+            icon={
+              <InputAdornment position="start" sx={{ marginInlineStart: 0.5 }}>
+                <MdTripOrigin size={16} />
+              </InputAdornment>
+            }
             label="From"
             onChange={onAirportSelect}
           />
@@ -50,7 +61,11 @@ export const AirportsPicker = ({ searchData, setSearchData }: Props) => {
         <Box flex={1}>
           <AirportAutocomplete
             value={searchData.destination}
-            icon={<MdOutlineLocationOn color="#9aa0a6" size={28} />}
+            icon={
+              <InputAdornment position="start">
+                <MdOutlineLocationOn size={28} />
+              </InputAdornment>
+            }
             label="To"
             onChange={onAirportSelect}
           />
