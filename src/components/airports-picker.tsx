@@ -1,5 +1,5 @@
 import { Autocomplete, Box, IconButton, InputAdornment, TextField } from "@mui/material";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { type SyntheticEvent, useCallback, useEffect, useRef, useState } from "react";
 import { MdOutlineLocationOn, MdSwapHoriz, MdTripOrigin } from "react-icons/md";
 import { getNearbyAirports, searchAirport } from "../services/sky-scrapper.service";
 import type { AirportResult, SearchFlightOptions } from "../types";
@@ -116,10 +116,20 @@ function AirportAutocomplete({
     }, 300);
   }, []);
 
+  function handleShouldOpen(e: SyntheticEvent) {
+    const hasSearchValue = (e.target as HTMLInputElement).value.trim().length > 0;
+    setIsOpen(hasSearchValue);
+  }
+
   return (
     <Autocomplete<AirportResult>
       value={value}
-      onChange={(_e, newValue) => newValue && onChange(newValue)}
+      onChange={(_e, newValue) => {
+        newValue && onChange(newValue);
+        setIsOpen(false);
+      }}
+      onFocus={handleShouldOpen}
+      onBlur={() => setIsOpen(false)}
       options={options}
       getOptionLabel={(option) => (option ? option.presentation.suggestionTitle : "")}
       open={!loading && isOpen}
@@ -130,8 +140,7 @@ function AirportAutocomplete({
           fullWidth
           onChange={(e) => {
             handleInput(e);
-            const hasSearchValue = (e.target as HTMLInputElement).value.trim().length > 0;
-            setIsOpen(hasSearchValue);
+            handleShouldOpen(e);
           }}
           slotProps={{
             input: {
