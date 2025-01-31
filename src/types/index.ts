@@ -5,3 +5,5 @@ export type * from "./flight-response.type";
 export type * from "./itinerary.type";
 export type * from "./leg-segment.type";
 export type * from "./leg.type";
+export type * from "./search-data.type";
+export type * from "./trip-type.type";
