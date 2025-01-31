@@ -1,5 +1,5 @@
 import { Autocomplete, Box, IconButton, InputAdornment, TextField } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MdOutlineLocationOn, MdSwapHoriz, MdTripOrigin } from "react-icons/md";
 import { getNearbyAirports, searchAirport } from "../services/sky-scrapper.service";
 import type { AirportResult, SearchFlightOptions } from "../types";
@@ -75,6 +75,7 @@ function AirportAutocomplete({
   onChange: (newValue: AirportResult) => void;
   showNearbyAirports?: boolean;
 }) {
+  const timeoutRef = useRef<number | null>(null);
   const initialRender = useRef(true);
   const [options, setOptions] = useState<AirportResult[]>([]);
 
@@ -91,11 +92,18 @@ function AirportAutocomplete({
     });
   }, [onChange, showNearbyAirports]);
 
-  async function handleInput(e: React.SyntheticEvent) {
-    const input = e.target as HTMLInputElement;
-    const airports = await searchAirport(input.value);
-    setOptions(airports);
-  }
+  const handleInput = useCallback((e: React.SyntheticEvent) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(async () => {
+      const input = e.target as HTMLInputElement;
+      const airports = await searchAirport(input.value);
+      setOptions(airports);
+      timeoutRef.current = null;
+    }, 300);
+  }, []);
 
   return (
     <Autocomplete<AirportResult>
