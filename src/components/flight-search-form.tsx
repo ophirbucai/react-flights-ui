@@ -1,5 +1,4 @@
 import { Button, CircularProgress, Container, Grid2, Typography } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
 import { useCallback, useState } from "react";
 import type { SearchData, TripType } from "../types";
 import { AirportsPicker } from "./airports-picker";
@@ -35,6 +34,14 @@ export const FlightSearchForm = () => {
   const handleBackToSearch = () => {
     setShowResults(false);
   };
+
+  const handleSwapLocations = useCallback(() => {
+    setSearchData((prev) => ({
+      ...prev,
+      origin: prev.destination,
+      destination: prev.origin,
+    }));
+  }, []);
 
   const handleSearchDataChange = useCallback(
     <K extends keyof SearchData>(key: K): React.Dispatch<React.SetStateAction<SearchData[K]>> =>
@@ -72,7 +79,11 @@ export const FlightSearchForm = () => {
           />
         </Grid2>
         <Grid2 size={12}>
-          <AirportsPicker searchData={searchData} setSearchData={setSearchData} />
+          <AirportsPicker
+            searchData={searchData}
+            handleSwapLocations={handleSwapLocations}
+            handleSearchDataChange={handleSearchDataChange}
+          />
         </Grid2>
         <Grid2 size={tripType === "one-way" ? 12 : 6}>
           <FlightDatePicker

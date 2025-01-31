@@ -7,3 +7,4 @@ export type * from "./leg-segment.type";
 export type * from "./leg.type";
 export type * from "./search-data.type";
 export type * from "./trip-type.type";
+export type * from "./nearby-airports-response.type";

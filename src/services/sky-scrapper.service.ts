@@ -1,6 +1,12 @@
 import axios from "axios";
 import { z } from "zod";
-import type { AirportResponse, AirportResult, FlightResponse } from "../types";
+import type {
+  AirportResponse,
+  AirportResult,
+  FlightResponse,
+  NearbyAirportsResponse,
+  NearbyAirportsResult,
+} from "../types";
 
 const clientV1 = axios.create({
   baseURL: "https://sky-scrapper.p.rapidapi.com/api/v1",
@@ -56,6 +62,25 @@ export async function searchFlights({ origin, destination, ...options }: SearchF
 export async function searchAirport(query: string) {
   const params = { query };
   const { data } = await clientV1.get<AirportResponse>("/flights/searchAirport", { params });
+
+  return data.data;
+}
+
+export async function getNearbyAirports({
+  latitude,
+  longitude,
+}: GeolocationCoordinates): Promise<NearbyAirportsResult> {
+  const params = { lng: longitude, lat: latitude };
+
+  const cacheKey = JSON.stringify(params);
+  const cachedData = window.localStorage.getItem(cacheKey);
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+  const { data } = await clientV1.get<NearbyAirportsResponse>("/flights/getNearByAirports", {
+    params,
+  });
+  window.localStorage.setItem(cacheKey, JSON.stringify(data.data));
 
   return data.data;
 }
