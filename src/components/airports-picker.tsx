@@ -1,7 +1,7 @@
 import { Autocomplete, Box, IconButton, InputAdornment, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { MdOutlineLocationOn, MdSwapHoriz, MdTripOrigin } from "react-icons/md";
-import { getNearbyAirports } from "../services/sky-scrapper.service";
+import { getNearbyAirports, searchAirport } from "../services/sky-scrapper.service";
 import type { AirportResult, SearchData } from "../types";
 
 type Props = {
@@ -93,7 +93,8 @@ function AirportAutocomplete({
 
   async function handleInput(e: React.SyntheticEvent) {
     const input = e.target as HTMLInputElement;
-    console.log(input.value);
+    const airports = await searchAirport(input.value);
+    setOptions(airports);
   }
 
   return (
