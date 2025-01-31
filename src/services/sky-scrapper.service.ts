@@ -25,7 +25,7 @@ const searchFlightsParamsSchema = z.object({
   destinationSkyId: z.string(),
   originEntityId: z.preprocess(Number, z.number().int()),
   destinationEntityId: z.preprocess(Number, z.number().int()),
-  departDate: z.coerce.date().transform(formatDate),
+  date: z.coerce.date().transform(formatDate),
   returnDate: z.coerce.date().optional().transform(formatDate),
   cabinClass: z.nativeEnum(CabinClass).default(CabinClass.Economy),
   adults: z.number().int().min(1).default(1),
@@ -42,7 +42,7 @@ export async function searchFlights({ origin, destination, ...options }: SearchF
     destinationEntityId: destination?.entityId,
   });
 
-  const { data } = await clientV1.get<FlightResponse>("/search", { params });
+  const { data } = await clientV1.get<FlightResponse>("/searchFlights", { params });
 
   return data.data;
 }

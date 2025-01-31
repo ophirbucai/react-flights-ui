@@ -14,7 +14,7 @@ export const FlightSearchForm = () => {
   const [searchData, setSearchData] = useState<SearchFlightOptions>({
     origin: null,
     destination: null,
-    departDate: null,
+    date: null,
     returnDate: null,
     cabinClass: CabinClass.Economy,
     passengers: {
@@ -26,20 +26,21 @@ export const FlightSearchForm = () => {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<FlightResult[] | null>(null);
 
+  const isFormValid =
+    !searchData.origin ||
+    !searchData.destination ||
+    !searchData.date ||
+    (tripType === "roundtrip" && !searchData.returnDate?.isAfter(searchData.date)) ||
+    !searchData.passengers ||
+    searchData.passengers.adults < 1;
+
   async function handleSearch() {
     try {
-      if (
-        !searchData.origin ||
-        !searchData.destination ||
-        searchData.departDate ||
-        (tripType === "roundtrip" && !searchData.returnDate) ||
-        !searchData.passengers ||
-        searchData.passengers.adults < 1
-      )
-        return;
+      if (isFormValid) return; // Todo: Descriptive error / focus on relevant input
 
       setLoading(true);
       const results = await searchFlights(searchData);
+      console.log(results);
       setResults(results);
     } catch (e) {
       console.error(e);
@@ -91,8 +92,8 @@ export const FlightSearchForm = () => {
         <Grid2 size={tripType === "one-way" ? 12 : 6}>
           <FlightDatePicker
             label="Departure Date"
-            onSelectDate={handleSearchDataChange("departDate")}
-            value={searchData.departDate}
+            onSelectDate={handleSearchDataChange("date")}
+            value={searchData.date}
             minDate={today.current}
             showDaysOutsideCurrentMonth
           />
@@ -104,7 +105,7 @@ export const FlightSearchForm = () => {
               label="Return Date"
               value={searchData.returnDate}
               onSelectDate={handleSearchDataChange("returnDate")}
-              minDate={searchData.departDate || today.current}
+              minDate={searchData.date || today.current}
               disableHighlightToday
             />
           </Grid2>
@@ -117,9 +118,7 @@ export const FlightSearchForm = () => {
             fullWidth
             size="large"
             onClick={handleSearch}
-            disabled={
-              loading || !searchData.origin || !searchData.destination || !searchData.departDate
-            }
+            disabled={!isFormValid}
           >
             {loading ? <CircularProgress size={24} color="inherit" /> : "Search Flights"}
           </Button>
