@@ -12,7 +12,7 @@ import { TripTypePicker } from "./trip-type-picker";
 
 export const FlightSearchForm = () => {
   const today = useRef(dayjs());
-  const [tripType, setTripType] = useState<TripType>("roundtrip");
+  const [tripType, setTripType] = useState<TripType>("round-trip");
   const [searchData, setSearchData] = useState<SearchFlightOptions>({
     origin: null,
     destination: null,
@@ -97,7 +97,7 @@ export const FlightSearchForm = () => {
           />
         </Grid2>
 
-        {tripType === "roundtrip" && (
+        {tripType === "round-trip" && (
           <Grid2 size={6}>
             <FlightDatePicker
               label="Return Date"

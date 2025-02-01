@@ -1,1 +1,1 @@
-export type TripType = "roundtrip" | "one-way";
+export type TripType = "round-trip" | "one-way";

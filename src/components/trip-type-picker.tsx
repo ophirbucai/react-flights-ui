@@ -11,7 +11,7 @@ type Props = {
 export const TripTypePicker = ({ tripType, setTripType }: Props) => {
   const selectRef = useRef<HTMLDivElement | null>(null);
   const textFieldRef = useRef<HTMLInputElement>(null);
-  const isRoundTrip = tripType === "roundtrip";
+  const isRoundTrip = tripType === "round-trip";
 
   const handleAdornmentClick = (e: React.SyntheticEvent) => {
     const selectTrigger = selectRef.current?.querySelector(".MuiSelect-select");
@@ -47,7 +47,7 @@ export const TripTypePicker = ({ tripType, setTripType }: Props) => {
       value={tripType}
       onChange={(e) => setTripType(e.target.value as TripType)}
     >
-      <MenuItem value="roundtrip">Round trip</MenuItem>
+      <MenuItem value="round-trip">Round trip</MenuItem>
       <MenuItem value="one-way">One-way</MenuItem>
     </TextField>
   );
