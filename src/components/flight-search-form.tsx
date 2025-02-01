@@ -29,8 +29,8 @@ export const FlightSearchForm = () => {
   const [result, setResult] = useState<FlightResult | null>(null);
 
   const { success: isFormValid } = useMemo(
-    () => searchFormSchema.safeParse(searchData),
-    [searchData],
+    () => searchFormSchema.safeParse({ ...searchData, tripType }),
+    [searchData, tripType],
   );
 
   async function handleSearch() {
