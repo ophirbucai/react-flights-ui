@@ -1,7 +1,6 @@
 import {
   Badge,
   Box,
-  Grid2,
   Paper,
   Table,
   TableBody,
@@ -18,34 +17,6 @@ import type { FlightResult } from "../types";
 import { formatFlightTags } from "../utils/format-flight-tags";
 
 export const FlightResultsTable = ({ result }: { result: FlightResult }) => {
-  if (result.context.status === "failure" || result.context.totalResults === 0) {
-    return (
-      <Paper sx={{ borderRadius: "0.75rem" }} elevation={5}>
-        <Grid2 container>
-          <Grid2 size={12} sx={{ p: 2 }}>
-            <Typography variant="h6" color="error.light" fontSize="1rem" textAlign="center">
-              No flights found. Please adjust your search criteria and try again.
-            </Typography>
-          </Grid2>
-          <Grid2 size={12}>
-            <Box
-              component="img"
-              src={result.destinationImageUrl}
-              alt="No flights found"
-              width="100%"
-              sx={{
-                borderRadius: "0.75rem",
-                objectFit: "cover",
-                objectPosition: "top",
-                maxHeight: "300px",
-              }}
-            />
-          </Grid2>
-        </Grid2>
-      </Paper>
-    );
-  }
-
   return (
     <TableContainer component={Paper} elevation={3}>
       <Table>

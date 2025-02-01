@@ -1,72 +1,28 @@
 import { Button, CircularProgress, Container, Grid2 } from "@mui/material";
 import dayjs from "dayjs";
-import { useCallback, useMemo, useRef, useState } from "react";
-import { searchFormSchema } from "../schemas/search-form.schema";
-import { searchFlights } from "../services/sky-scrapper.service";
-import { CabinClass, type FlightResult, type SearchFlightOptions, type TripType } from "../types";
+import { useRef } from "react";
+import { useSearchForm } from "../hooks/useSearchForm";
 import { AirportsPicker } from "./airports-picker";
 import { FlightDatePicker } from "./flight-date-picker";
+import { FlightResultsEmpty } from "./flight-results-empty";
 import { FlightResultsTable } from "./flight-results-table";
 import PassengerCountPicker from "./passengers-count-picker";
 import { TripTypePicker } from "./trip-type-picker";
 
 export const FlightSearchForm = () => {
   const today = useRef(dayjs());
-  const [tripType, setTripType] = useState<TripType>("round-trip");
-  const [searchData, setSearchData] = useState<SearchFlightOptions>({
-    origin: null,
-    destination: null,
-    date: null,
-    returnDate: null,
-    cabinClass: CabinClass.Economy,
-    passengers: {
-      adults: 1,
-      children: 0,
-      infants: 0,
-    },
-  });
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<FlightResult | null>(null);
 
-  const { success: isFormValid } = useMemo(
-    () => searchFormSchema.safeParse({ ...searchData, tripType }),
-    [searchData, tripType],
-  );
-
-  async function handleSearch() {
-    try {
-      if (!isFormValid) return; // Todo: Descriptive error / focus on relevant input
-
-      setLoading(true);
-      const result = await searchFlights(searchData);
-      setResult(result);
-    } catch (e) {
-      console.error(e);
-      // Todo: Handle errors gracefully
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const handleSwapLocations = useCallback(() => {
-    setSearchData((prev) => ({
-      ...prev,
-      origin: prev.destination,
-      destination: prev.origin,
-    }));
-  }, []);
-
-  const handleSearchDataChange = useCallback(
-    <K extends keyof SearchFlightOptions>(
-      key: K,
-    ): React.Dispatch<React.SetStateAction<(typeof searchData)[K]>> =>
-      (dispatch) =>
-        setSearchData((prev) => ({
-          ...prev,
-          [key]: typeof dispatch !== "function" ? dispatch : dispatch(prev[key]),
-        })),
-    [],
-  );
+  const {
+    loading,
+    result,
+    tripType,
+    searchData,
+    isFormValid,
+    setTripType,
+    handleSearch,
+    handleSwapLocations,
+    handleSearchDataChange,
+  } = useSearchForm();
 
   const showResults = !!result;
 
@@ -124,7 +80,11 @@ export const FlightSearchForm = () => {
       </Grid2>
       {showResults && (
         <Grid2 container sx={{ mt: 4 }}>
-          <FlightResultsTable result={result} />
+          {result.context.totalResults > 0 ? (
+            <FlightResultsTable result={result} />
+          ) : (
+            <FlightResultsEmpty result={result} />
+          )}
         </Grid2>
       )}
     </Container>
