@@ -12,7 +12,7 @@ const baseSchema = z.object({
 
 const oneWaySchema = baseSchema.extend({
   tripType: z.literal("one-way"),
-  returnDate: z.custom<Dayjs>(isDayjs).optional(),
+  returnDate: z.custom<Dayjs>(isDayjs).nullish(),
 });
 
 const roundTripSchema = baseSchema.extend({
